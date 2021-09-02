@@ -35,7 +35,7 @@ info.onAdd = function (mymap) {
 };
 
 info.update = function (props) {
-    this._div.innerHTML = '<h4>Threatened Shark and Ray Species Richness</h4>' +  (props ?
+    this._div.innerHTML = '<h4>Threatened Species Richness</h4>' +  (props ?
         props.Join_Count + ' species'
         : 'Hover over a cell');
 };
