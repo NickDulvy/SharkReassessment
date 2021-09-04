@@ -3,9 +3,7 @@ var contentHeight = "height:" + (window.innerHeight - 50) +"px";
 document.getElementById('mapid').setAttribute("style",contentHeight);
 
 
-var mymap = L.map('mapid', {
-    zoomSnap: 0,
-    minZoom: 1,}).setView([16.9, -8.7], 2);
+var mymap = L.map('mapid', {zoomSnap: 0, minZoom: 1}).setView([16.9, -8.7], 2);
 
     mymap.createPane('labels');
 	// This pane is above markers but below popups
@@ -35,8 +33,8 @@ info.onAdd = function (mymap) {
 };
 
 info.update = function (props) {
-    this._div.innerHTML = '<h4>Threatened Species Richness</h4>' +  (props ?
-        props.Join_Count + ' species'
+    this._div.innerHTML = '<h4>Proportion Coastal Species Threatened</h4>' +  (props ?
+        (props.Proportion_THR *100).toFixed(1) + '% of species threatened'
         : 'Hover over a cell');
 };
 
@@ -47,17 +45,17 @@ var legend = L.control({position: 'bottomright'});
 	legend.onAdd = function (map) {
 
 		var div = L.DomUtil.create('div', 'info legend'),
-			grades = [1, 21, 41, 61, 81, 101, 106],
+			grades = [0.0, 0.2, 0.4, 0.6, 0.8],
 			labels = [],
 			from, to;
 
-		for (var i = 0; i < grades.length-1; i++) {
+		for (var i = 0; i < grades.length; i++) {
 			from = grades[i];
 			to = grades[i + 1];
 
 			labels.push(
-				'<i style="background:' + getColor(from + 1) + '"></i> ' +
-				from + (to ? '&ndash;' + (to-1) : '+'));
+				'<i style="background:' + getColor(from + 0.1) + '"></i> ' +
+				(from * 100 ) + (to ? '&ndash;' + (to*100 - 1 + "%") : '%+'));
 		}
 
 		div.innerHTML = labels.join('<br>');
@@ -80,19 +78,18 @@ var legend = L.control({position: 'bottomright'});
 
 
 function getColor(d) {
-    return d > 100 ? '#800026' :
-           d > 80  ? '#E31A1C' :
-           d > 60   ? '#FD8D3C' :
-           d > 40   ? '#FEB24C' :
-           d > 20   ? '#FED976' :
-                      '#FFEDA0';
+    return d > 0.8 ? '#a50f15' :
+            d > 0.6  ? '#de2d26' :
+           d > 0.4  ? '#fb6a4a' :
+           d > 0.2  ? '#fcae91' :
+                      '#fee5d9';
 }
 
 function style(feature) {
     return {
-        fillColor: getColor(feature.properties.Join_Count),
+        fillColor: getColor(feature.properties.Proportion_THR),
         weight: 2,
-        color: getColor(feature.properties.Join_Count),
+        color: getColor(feature.properties.Proportion_THR),
         opacity: 1,
         fillOpacity: 1
     };

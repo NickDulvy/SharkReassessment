@@ -3,9 +3,7 @@ var contentHeight = "height:" + (window.innerHeight - 50) +"px";
 document.getElementById('mapid').setAttribute("style",contentHeight);
 
 
-var mymap = L.map('mapid', {
-    zoomSnap: 0,
-    minZoom: 1,}).setView([16.9, -8.7], 2);
+var mymap = L.map('mapid', {zoomSnap: 0, minZoom: 1}).setView([16.9, -8.7], 2);
 
     mymap.createPane('labels');
 	// This pane is above markers but below popups
@@ -35,38 +33,14 @@ info.onAdd = function (mymap) {
 };
 
 info.update = function (props) {
-    this._div.innerHTML = '<h4>Threatened Species Richness</h4>' +  (props ?
+    this._div.innerHTML = '<h4>Data Deficient Species Richness</h4>' +  (props ?
         props.Join_Count + ' species'
         : 'Hover over a cell');
 };
 
 info.addTo(mymap);
 
-var legend = L.control({position: 'bottomright'});
-
-	legend.onAdd = function (map) {
-
-		var div = L.DomUtil.create('div', 'info legend'),
-			grades = [1, 21, 41, 61, 81, 101, 106],
-			labels = [],
-			from, to;
-
-		for (var i = 0; i < grades.length-1; i++) {
-			from = grades[i];
-			to = grades[i + 1];
-
-			labels.push(
-				'<i style="background:' + getColor(from + 1) + '"></i> ' +
-				from + (to ? '&ndash;' + (to-1) : '+'));
-		}
-
-		div.innerHTML = labels.join('<br>');
-		return div;
-	};
-
-	legend.addTo(mymap);
-
-    var reference = L.control({position: 'bottomleft'});
+var reference = L.control({position: 'bottomleft'});
 
     reference.onAdd = function (map) {
         this.div1 = L.DomUtil.create('div', 'info reference'),
@@ -78,14 +52,41 @@ var legend = L.control({position: 'bottomright'});
     
     reference.addTo(mymap);
 
+var legend = L.control({position: 'bottomright'});
+
+	legend.onAdd = function (map) {
+
+		var div = L.DomUtil.create('div', 'info legend'),
+			grades = [1, 3, 5, 7, 10,12,14,16],
+			labels = [],
+			from, to;
+
+		for (var i = 0; i < grades.length-1; i++) {
+			from = grades[i];
+			to = grades[i + 1];
+
+			labels.push(
+				'<i style="background:' + getColor(from + 1) + '"></i> ' +
+				from + (to ? '&ndash;' + (to-1) : ''));
+		}
+
+		div.innerHTML = labels.join('<br>');
+		return div;
+	};
+
+	legend.addTo(mymap);
+
+
+
 
 function getColor(d) {
-    return d > 100 ? '#800026' :
-           d > 80  ? '#E31A1C' :
-           d > 60   ? '#FD8D3C' :
-           d > 40   ? '#FEB24C' :
-           d > 20   ? '#FED976' :
-                      '#FFEDA0';
+    return d > 13  ? '#6e016b' :
+            d > 11  ? '#88419d' :
+           d > 9  ? '#8c6bb1' :
+           d > 6   ? '#8c96c6' :
+           d > 4   ? '#9ebcda' :
+           d > 2   ? '#bfd3e6' :
+                      '#edf8fb';
 }
 
 function style(feature) {

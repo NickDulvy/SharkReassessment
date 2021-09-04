@@ -3,9 +3,7 @@ var contentHeight = "height:" + (window.innerHeight - 50) +"px";
 document.getElementById('mapid').setAttribute("style",contentHeight);
 
 
-var mymap = L.map('mapid', {
-    zoomSnap: 0,
-    minZoom: 1,}).setView([16.9, -8.7], 2);
+var mymap = L.map('mapid', {zoomSnap: 0, minZoom: 1}).setView([16.9, -8.7], 2);
 
     mymap.createPane('labels');
 	// This pane is above markers but below popups
@@ -35,7 +33,7 @@ info.onAdd = function (mymap) {
 };
 
 info.update = function (props) {
-    this._div.innerHTML = '<h4>Threatened Species Richness</h4>' +  (props ?
+    this._div.innerHTML = '<h4>Coastal Threatened Species Richness</h4>' +  (props ?
         props.Join_Count + ' species'
         : 'Hover over a cell');
 };
@@ -47,7 +45,7 @@ var legend = L.control({position: 'bottomright'});
 	legend.onAdd = function (map) {
 
 		var div = L.DomUtil.create('div', 'info legend'),
-			grades = [1, 21, 41, 61, 81, 101, 106],
+			grades = [1, 21, 41, 61, 81, 84],
 			labels = [],
 			from, to;
 
@@ -80,12 +78,11 @@ var legend = L.control({position: 'bottomright'});
 
 
 function getColor(d) {
-    return d > 100 ? '#800026' :
-           d > 80  ? '#E31A1C' :
-           d > 60   ? '#FD8D3C' :
-           d > 40   ? '#FEB24C' :
-           d > 20   ? '#FED976' :
-                      '#FFEDA0';
+    return d > 80  ? '#bd0026' :
+           d > 60   ? '#f03b20' :
+           d > 40   ? '#fd8d3c' :
+           d > 20   ? '#fecc5c' :
+                      '#ffffb2';
 }
 
 function style(feature) {
